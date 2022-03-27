@@ -19,7 +19,7 @@ const game = (function () {
   const mark = (position, symbol) => {
     if (!status.playing || status.end) return;
     if (!board[position]) board[position] = symbol; // only when empty
-    const { end, winner } = over();
+    const { end, winner } = isOver();
     if (end) {
       changeStatus("end");
       console.log(winner);
@@ -36,7 +36,7 @@ const game = (function () {
     status[prop] = !status[prop];
   };
 
-  const over = () => {
+  const isOver = () => {
     // Checking 3 rows;
     const allFilled = board.every((pos) => pos !== "");
     if (allFilled) return { end: true, winner: null };
@@ -85,11 +85,11 @@ const game = (function () {
   // player that made last move
   const playerThatMarkedRecently = () =>
     turn() === oPLayer ? XPlayer : oPLayer;
-  return { getBoard, mark, turn, over, changeStatus, restart };
+  return { getBoard, mark, turn, isOver, changeStatus, restart };
 })();
 
 const displayBoard = document.querySelector(".board");
-const displayController = (function (board) {
+const displayController = (function (board, game) {
   console.log("this is the display controller");
   function display() {
     board.innerHTML = "";
@@ -106,7 +106,7 @@ const displayController = (function (board) {
   }
 
   return { display };
-})(displayBoard);
+})(displayBoard, game);
 displayController.display();
 
 const player = (symbol, pName = "") => {
